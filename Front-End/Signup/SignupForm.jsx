@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function SignupForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  // Reset form on mount to avoid any pre-filled state
+  useEffect(() => {
+    setName("");
+    setEmail("");
+    setPassword("");
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +31,7 @@ export default function SignupForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form autoComplete="off" onSubmit={handleSubmit}>
       <h2>Signup</h2>
       <input
         type="text"
@@ -32,6 +39,7 @@ export default function SignupForm() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
+        autoComplete="off"
       />
       <input
         type="email"
@@ -39,6 +47,7 @@ export default function SignupForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        autoComplete="off"
       />
       <input
         type="password"
@@ -46,6 +55,7 @@ export default function SignupForm() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        autoComplete="new-password"
       />
       <button type="submit">Signup</button>
       <p>{message}</p>
