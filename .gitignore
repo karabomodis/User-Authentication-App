@@ -1,0 +1,7 @@
+# Ignore node modules
+Back-end/node_modules/
+Front-end/node_modules/
+
+# Ignore build/dist folders
+Front-end/build/
+Front-end/dist/
