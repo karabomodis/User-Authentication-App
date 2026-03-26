@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupForm() {
   const [name, setName] = useState("");
@@ -6,7 +7,8 @@ export default function SignupForm() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  // Reset form on mount to avoid any pre-filled state
+  const navigate = useNavigate();
+
   useEffect(() => {
     setName("");
     setEmail("");
@@ -24,7 +26,16 @@ export default function SignupForm() {
       });
 
       const data = await res.json();
-      setMessage(data.message);
+
+      if (res.ok) {
+        setMessage("Signup successful! Redirecting to login...");
+
+        setTimeout(() => {
+          navigate("/"); // 👈 go to login page
+        }, 1500);
+      } else {
+        setMessage(data.message || "Signup failed");
+      }
     } catch (err) {
       setMessage("Error connecting to server");
     }
@@ -33,31 +44,33 @@ export default function SignupForm() {
   return (
     <form autoComplete="off" onSubmit={handleSubmit}>
       <h2>Signup</h2>
+
       <input
         type="text"
         placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
-        autoComplete="off"
       />
+
       <input
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        autoComplete="off"
       />
+
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
-        autoComplete="new-password"
       />
+
       <button type="submit">Signup</button>
+
       <p>{message}</p>
     </form>
   );

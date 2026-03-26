@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  // Reset form on mount to avoid autofilled state
+  const navigate = useNavigate();
+
   useEffect(() => {
     setEmail("");
     setPassword("");
@@ -25,18 +27,24 @@ export default function LoginForm() {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
-      }
+        setMessage("Login successful! Redirecting...");
 
-      setMessage(data.message);
-      console.log("Login response:", data);
-    } catch (err) {
-      setMessage("Error connecting to server");
+        setTimeout(() => {
+          navigate("/profile");
+        }, 1000);
+      } else {
+        setMessage(data.message || "Login failed");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+      console.error(error);
     }
   };
 
   return (
     <form autoComplete="off" onSubmit={handleSubmit}>
       <h2>Login</h2>
+
       <input
         type="email"
         placeholder="Email"
@@ -45,6 +53,7 @@ export default function LoginForm() {
         required
         autoComplete="off"
       />
+
       <input
         type="password"
         placeholder="Password"
@@ -53,7 +62,9 @@ export default function LoginForm() {
         required
         autoComplete="new-password"
       />
+
       <button type="submit">Login</button>
+
       <p>{message}</p>
     </form>
   );
